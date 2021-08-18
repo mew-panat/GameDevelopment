@@ -125,6 +125,8 @@ PlayState.preload = function () {
   this.game.load.image("icon:coin", "images/coin_icon.png");
   this.game.load.image("font:numbers", "images/numbers.png");
 
+  this.game.load.spritesheet("door", "images/door.png", 42, 66);
+
   this.game.load.audio("sfx:jump", "audio/jump.wav");
 
   this.game.load.spritesheet("coin", "images/coin_animated.png", 22, 22);
@@ -165,6 +167,7 @@ PlayState.create = function () {
 };
 
 PlayState._loadLevel = function (data) {
+  this.bgDecoration = this.game.add.group();
   this.platforms = this.game.add.group();
   this.coins = this.game.add.group();
   this.spiders = this.game.add.group();
@@ -177,6 +180,8 @@ PlayState._loadLevel = function (data) {
   this._spawnCharacters({ hero: data.hero, spiders: data.spiders });
   // spawn important objects
   data.coins.forEach(this._spawnCoin, this);
+
+  this._spawnDoor(data.door.x, data.door.y);
 
   // enable gravity
   const GRAVITY = 1200;
@@ -226,6 +231,13 @@ PlayState._spawnEnemyWall = function (x, y, side) {
   this.game.physics.enable(sprite);
   sprite.body.immovable = true;
   sprite.body.allowGravity = false;
+};
+
+PlayState._spawnDoor = function (x, y) {
+  this.door = this.bgDecoration.create(x, y, "door");
+  this.door.anchor.setTo(0.5, 1);
+  this.game.physics.enable(this.door);
+  this.door.body.allowGravity = false;
 };
 
 PlayState._createHud = function () {
