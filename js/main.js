@@ -81,6 +81,8 @@ PlayState.preload = function () {
   this.game.load.audio("sfx:coin", "audio/coin.wav");
 
   this.game.load.spritesheet("spider", "images/spider.png", 42, 32);
+
+  this.game.load.audio("sfx:stomp", "audio/stomp.wav");
 };
 
 PlayState.init = function () {
@@ -105,6 +107,7 @@ PlayState.create = function () {
   this.sfx = {
     jump: this.game.add.audio("sfx:jump"),
     coin: this.game.add.audio("sfx:coin"),
+    stomp: this.game.add.audio("sfx:stomp"),
   };
 };
 
@@ -201,11 +204,24 @@ PlayState._handleCollisions = function () {
   );
   this.game.physics.arcade.collide(this.spiders, this.platforms);
   this.game.physics.arcade.collide(this.spiders, this.enemyWalls);
+
+  this.game.physics.arcade.overlap(
+    this.hero,
+    this.spiders,
+    this._onHeroVsEnemy,
+    null,
+    this
+  );
 };
 
 PlayState._onHeroVsCoin = function (hero, coin) {
   this.sfx.coin.play();
   coin.kill();
+};
+
+PlayState._onHeroVsEnemy = function (hero, enemy) {
+  this.sfx.stomp.play();
+  this.game.state.restart();
 };
 
 window.onload = function () {
