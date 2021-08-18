@@ -25,6 +25,10 @@ Hero.prototype.jump = function () {
 
   return canJump;
 };
+Hero.prototype.bounce = function () {
+  const BOUNCE_SPEED = 200;
+  this.body.velocity.y = -BOUNCE_SPEED;
+};
 
 function Spider(game, x, y) {
   Phaser.Sprite.call(this, game, x, y, "spider");
@@ -220,8 +224,16 @@ PlayState._onHeroVsCoin = function (hero, coin) {
 };
 
 PlayState._onHeroVsEnemy = function (hero, enemy) {
-  this.sfx.stomp.play();
-  this.game.state.restart();
+  if (hero.body.velocity.y > 0) {
+    // kill enemies when hero is falling
+    hero.bounce();
+    enemy.kill();
+    this.sfx.stomp.play();
+  } else {
+    // game over -> restart the game
+    this.sfx.stomp.play();
+    this.game.state.restart();
+  }
 };
 
 window.onload = function () {
