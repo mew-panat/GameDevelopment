@@ -127,6 +127,8 @@ PlayState.preload = function () {
 
   this.game.load.spritesheet("door", "images/door.png", 42, 66);
 
+  this.game.load.image("key", "images/key.png");
+
   this.game.load.audio("sfx:jump", "audio/jump.wav");
 
   this.game.load.spritesheet("coin", "images/coin_animated.png", 22, 22);
@@ -182,6 +184,7 @@ PlayState._loadLevel = function (data) {
   data.coins.forEach(this._spawnCoin, this);
 
   this._spawnDoor(data.door.x, data.door.y);
+  this._spawnKey(data.key.x, data.key.y);
 
   // enable gravity
   const GRAVITY = 1200;
@@ -238,6 +241,13 @@ PlayState._spawnDoor = function (x, y) {
   this.door.anchor.setTo(0.5, 1);
   this.game.physics.enable(this.door);
   this.door.body.allowGravity = false;
+};
+
+PlayState._spawnKey = function (x, y) {
+  this.key = this.bgDecoration.create(x, y, "key");
+  this.key.anchor.set(0.5, 0.5);
+  this.game.physics.enable(this.key);
+  this.key.body.allowGravity = false;
 };
 
 PlayState._createHud = function () {
