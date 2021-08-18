@@ -83,7 +83,10 @@ PlayState.preload = function () {
   this.game.load.image("grass:1x1", "images/grass_1x1.png");
 
   this.game.load.image("hero", "images/hero_stopped.png");
+
   this.game.load.image("invisible-wall", "images/invisible_wall.png");
+
+  this.game.load.image("icon:coin", "images/coin_icon.png");
 
   this.game.load.audio("sfx:jump", "audio/jump.wav");
 
@@ -97,6 +100,7 @@ PlayState.preload = function () {
 };
 
 PlayState.init = function () {
+  this.coinPickupCount = 0;
   this.game.renderer.renderSession.roundPixels = true;
   this.keys = this.game.input.keyboard.addKeys({
     left: Phaser.KeyCode.LEFT,
@@ -120,6 +124,7 @@ PlayState.create = function () {
     coin: this.game.add.audio("sfx:coin"),
     stomp: this.game.add.audio("sfx:stomp"),
   };
+  this._createHud();
 };
 
 PlayState._loadLevel = function (data) {
@@ -186,6 +191,14 @@ PlayState._spawnEnemyWall = function (x, y, side) {
   sprite.body.allowGravity = false;
 };
 
+PlayState._createHud = function () {
+  let coinIcon = this.game.make.image(0, 0, "icon:coin");
+
+  this.hud = this.game.add.group();
+  this.hud.add(coinIcon);
+  this.hud.position.set(10, 10);
+};
+
 PlayState.update = function () {
   this._handleCollisions();
   this._handleInput();
@@ -228,6 +241,7 @@ PlayState._handleCollisions = function () {
 PlayState._onHeroVsCoin = function (hero, coin) {
   this.sfx.coin.play();
   coin.kill();
+  this.coinPickupCount++;
 };
 
 PlayState._onHeroVsEnemy = function (hero, enemy) {
