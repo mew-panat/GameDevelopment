@@ -254,6 +254,14 @@ PlayState._spawnKey = function (x, y) {
   this.key.anchor.set(0.5, 0.5);
   this.game.physics.enable(this.key);
   this.key.body.allowGravity = false;
+
+  this.key.y -= 3;
+  this.game.add
+    .tween(this.key)
+    .to({ y: this.key.y + 6 }, 800, Phaser.Easing.Sinusoidal.InOut)
+    .yoyo(true)
+    .loop()
+    .start();
 };
 
 PlayState._createHud = function () {
