@@ -326,6 +326,17 @@ PlayState._handleCollisions = function () {
     null,
     this
   );
+
+  this.game.physics.arcade.overlap(
+    this.hero,
+    this.door,
+    this._onHeroVsDoor,
+    // ignore if there is no key or the player is on air
+    function (hero, door) {
+      return this.hasKey && hero.body.touching.down;
+    },
+    this
+  );
 };
 
 PlayState._onHeroVsCoin = function (hero, coin) {
@@ -351,6 +362,12 @@ PlayState._onHeroVsKey = function (hero, key) {
   this.sfx.key.play();
   key.kill();
   this.hasKey = true;
+};
+
+PlayState._onHeroVsDoor = function (hero, door) {
+  this.sfx.door.play();
+  this.game.state.restart();
+  // TODO: go to the next level instead
 };
 
 window.onload = function () {
