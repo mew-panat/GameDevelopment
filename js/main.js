@@ -133,6 +133,8 @@ PlayState.preload = function () {
 
   this.game.load.spritesheet("coin", "images/coin_animated.png", 22, 22);
 
+  this.game.load.spritesheet("icon:key", "images/key_icon.png", 34, 30);
+
   this.game.load.audio("sfx:coin", "audio/coin.wav");
 
   this.game.load.spritesheet("spider", "images/spider.png", 42, 32);
@@ -265,6 +267,9 @@ PlayState._spawnKey = function (x, y) {
 };
 
 PlayState._createHud = function () {
+  this.keyIcon = this.game.make.image(0, 19, "icon:key");
+  this.keyIcon.anchor.set(0, 0.5);
+
   const NUMBERS_STR = "0123456789X ";
   this.coinFont = this.game.add.retroFont(
     "font:numbers",
@@ -274,7 +279,7 @@ PlayState._createHud = function () {
     6
   );
 
-  let coinIcon = this.game.make.image(0, 0, "icon:coin");
+  let coinIcon = this.game.make.image(this.keyIcon.width + 7, 0, "icon:coin");
   let coinScoreImg = this.game.make.image(
     coinIcon.x + coinIcon.width,
     coinIcon.height / 2,
@@ -285,6 +290,7 @@ PlayState._createHud = function () {
   this.hud = this.game.add.group();
   this.hud.add(coinIcon);
   this.hud.add(coinScoreImg);
+  this.hud.add(this.keyIcon);
   this.hud.position.set(10, 10);
 };
 
@@ -292,6 +298,7 @@ PlayState.update = function () {
   this._handleCollisions();
   this._handleInput();
   this.coinFont.text = `x${this.coinPickupCount}`;
+  this.keyIcon.frame = this.hasKey ? 1 : 0;
 };
 
 PlayState._handleInput = function () {
