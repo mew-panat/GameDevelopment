@@ -12,7 +12,7 @@ function Hero(game, x, y) {
 Hero.prototype = Object.create(Phaser.Sprite.prototype);
 Hero.prototype.constructor = Hero;
 Hero.prototype.move = function (direction) {
-  const SPEED = 200;
+  const SPEED = 300;
   this.body.velocity.x = direction * SPEED;
 };
 Hero.prototype.jump = function () {
@@ -59,6 +59,13 @@ Spider.prototype.update = function () {
   } else if (this.body.touching.left || this.body.blocked.left) {
     this.body.velocity.x = Spider.SPEED; // turn right
   }
+};
+Spider.prototype.die = function () {
+  this.body.enable = false;
+
+  this.animations.play("die").onComplete.addOnce(function () {
+    this.kill();
+  }, this);
 };
 
 // load game assets here
@@ -227,7 +234,7 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
   if (hero.body.velocity.y > 0) {
     // kill enemies when hero is falling
     hero.bounce();
-    enemy.kill();
+    enemy.die();
     this.sfx.stomp.play();
   } else {
     // game over -> restart the game
