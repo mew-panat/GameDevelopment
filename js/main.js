@@ -138,6 +138,9 @@ PlayState.preload = function () {
   this.game.load.spritesheet("spider", "images/spider.png", 42, 32);
 
   this.game.load.audio("sfx:stomp", "audio/stomp.wav");
+
+  this.game.load.audio("sfx:key", "audio/key.wav");
+  this.game.load.audio("sfx:door", "audio/door.wav");
 };
 
 PlayState.init = function () {
@@ -154,6 +157,7 @@ PlayState.init = function () {
       this.sfx.jump.play();
     }
   }, this);
+  this.hasKey = false;
 };
 
 // create game entities and set up world here
@@ -161,6 +165,8 @@ PlayState.create = function () {
   this.game.add.image(0, 0, "background");
   this._loadLevel(this.game.cache.getJSON("level:1"));
   this.sfx = {
+    key: this.game.add.audio("sfx:key"),
+    door: this.game.add.audio("sfx:door"),
     jump: this.game.add.audio("sfx:jump"),
     coin: this.game.add.audio("sfx:coin"),
     stomp: this.game.add.audio("sfx:stomp"),
@@ -312,6 +318,14 @@ PlayState._handleCollisions = function () {
     null,
     this
   );
+
+  this.game.physics.arcade.overlap(
+    this.hero,
+    this.key,
+    this._onHeroVsKey,
+    null,
+    this
+  );
 };
 
 PlayState._onHeroVsCoin = function (hero, coin) {
@@ -331,6 +345,12 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
     this.sfx.stomp.play();
     this.game.state.restart();
   }
+};
+
+PlayState._onHeroVsKey = function (hero, key) {
+  this.sfx.key.play();
+  key.kill();
+  this.hasKey = true;
 };
 
 window.onload = function () {
