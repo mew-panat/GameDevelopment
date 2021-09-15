@@ -1,4 +1,4 @@
-PlayState = {};
+// ============================CHARACTERS=================================
 function Hero(game, x, y) {
   // call Phaser.Sprite constructor
   Phaser.Sprite.call(this, game, x, y, "hero");
@@ -103,6 +103,10 @@ Spider.prototype.die = function () {
     this.kill();
   }, this);
 };
+
+// ============================PLAY STATE=================================
+// This is where the game logic is actually handled.
+PlayState = {};
 
 // load game assets here
 PlayState.preload = function () {
